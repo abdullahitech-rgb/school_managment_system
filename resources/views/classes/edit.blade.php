@@ -1,0 +1,36 @@
+@extends('layouts.app')
+@section('title', 'Edit Class')
+@section('content')
+<div class="container-scroller">
+    @include('layouts.navbar')
+    <div class="container-fluid page-body-wrapper">
+        @include('layouts.sidebar')
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header"><h3 class="page-title">Edit Class</h3></div>
+                @if($errors->any())
+                <div class="alert alert-danger"><strong>Error!</strong><ul>@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
+                @endif
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ route('classes.update', $class->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <label class="form-label">Class Name *</label>
+                                <input type="text" name="name" class="form-control" value="{{ old('name', $class->name) }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea name="description" class="form-control" rows="3">{{ old('description', $class->description) }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Class</button>
+                            <a href="{{ route('classes.index') }}" class="btn btn-secondary">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

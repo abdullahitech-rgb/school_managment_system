@@ -1,129 +1,168 @@
-<!-- sidebar.blade.php -->
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
-  <ul class="nav">
-    <li class="nav-item nav-profile">
-      <a href="#" class="nav-link">
-        <div class="nav-profile-image">
-          <img src="assets/images/faces/face1.jpg" alt="profile" />
-          <span class="login-status online"></span>
-          <!--change to offline or busy as needed-->
+<aside class="sidebar" id="sidebar">
+    <!-- User Profile Card -->
+    <div class="sidebar-header">
+        <div class="user-profile-card">
+            <div class="profile-avatar">
+                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+            </div>
+            <h6 class="mb-0" style="font-weight: 600; color: #111827;">{{ Auth::user()->name }}</h6>
+            <small style="color: #6b7280;">{{ ucfirst(Auth::user()->role) }}</small>
         </div>
-        <div class="nav-profile-text d-flex flex-column">
-          <span class="font-weight-bold mb-2">David Grey. H</span>
-          <span class="text-secondary text-small">Project Manager</span>
-        </div>
-        <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="index.html">
-        <span class="menu-title">Dashboard</span>
-        <i class="mdi mdi-home menu-icon"></i>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-        <span class="menu-title">Basic UI Elements</span>
-        <i class="menu-arrow"></i>
-        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-      </a>
-      <div class="collapse" id="ui-basic">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item">
-            <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/ui-features/typography.html">Typography</a>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-        <span class="menu-title">Icons</span>
-        <i class="mdi mdi-contacts menu-icon"></i>
-      </a>
-      <div class="collapse" id="icons">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item">
-            <a class="nav-link" href="pages/icons/font-awesome.html">Font Awesome</a>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
-        <span class="menu-title">Forms</span>
-        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-      </a>
-      <div class="collapse" id="forms">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item">
-            <a class="nav-link" href="pages/forms/basic_elements.html">Form Elements</a>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-        <span class="menu-title">Charts</span>
-        <i class="mdi mdi-chart-bar menu-icon"></i>
-      </a>
-      <div class="collapse" id="charts">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item">
-            <a class="nav-link" href="pages/charts/chartjs.html">ChartJs</a>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
-        <span class="menu-title">Tables</span>
-        <i class="mdi mdi-table-large menu-icon"></i>
-      </a>
-      <div class="collapse" id="tables">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item">
-            <a class="nav-link" href="pages/tables/basic-table.html">Basic table</a>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-        <span class="menu-title">User Pages</span>
-        <i class="menu-arrow"></i>
-        <i class="mdi mdi-lock menu-icon"></i>
-      </a>
-      <div class="collapse" id="auth">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item">
-            <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/samples/error-404.html"> Error 404 </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/samples/error-500.html"> Error 500 </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/samples/login.html"> Login </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/samples/register.html"> Register </a>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="documentation/documentation.html">
-        <span class="menu-title">Documentation</span>
-        <i class="mdi mdi-file-document-box menu-icon"></i>
-      </a>
-    </li>
-  </ul>
-</nav>
+    </div>
+
+    <!-- Menu -->
+    <ul class="sidebar-menu">
+        <!-- Dashboard -->
+        <li class="sidebar-item">
+            <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        @if(Auth::user()->isAdmin() || Auth::user()->isSuperAdmin())
+            <!-- Students -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('students.*') ? 'active' : '' }}">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Students</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
+                </a>
+                <ul class="sidebar-submenu {{ request()->routeIs('students.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('students.index') }}" class="sidebar-link {{ request()->routeIs('students.index') ? 'active' : '' }}">
+                            <i class="bi bi-list-ul"></i> View All
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('students.create') }}" class="sidebar-link {{ request()->routeIs('students.create') ? 'active' : '' }}">
+                            <i class="bi bi-plus-lg"></i> Add New
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Teachers -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('teachers.*') ? 'active' : '' }}">
+                    <i class="bi bi-person-workspace"></i>
+                    <span>Teachers</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
+                </a>
+                <ul class="sidebar-submenu {{ request()->routeIs('teachers.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('teachers.index') }}" class="sidebar-link {{ request()->routeIs('teachers.index') ? 'active' : '' }}">
+                            <i class="bi bi-list-ul"></i> View All
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('teachers.create') }}" class="sidebar-link {{ request()->routeIs('teachers.create') ? 'active' : '' }}">
+                            <i class="bi bi-plus-lg"></i> Add New
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Classes -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('classes.*') ? 'active' : '' }}">
+                    <i class="bi bi-book-fill"></i>
+                    <span>Classes</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
+                </a>
+                <ul class="sidebar-submenu {{ request()->routeIs('classes.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('classes.index') }}" class="sidebar-link {{ request()->routeIs('classes.index') ? 'active' : '' }}">
+                            <i class="bi bi-list-ul"></i> View All
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('classes.create') }}" class="sidebar-link {{ request()->routeIs('classes.create') ? 'active' : '' }}">
+                            <i class="bi bi-plus-lg"></i> Add New
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Sections -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('sections.*') ? 'active' : '' }}">
+                    <i class="bi bi-folder2-open"></i>
+                    <span>Sections</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
+                </a>
+                <ul class="sidebar-submenu {{ request()->routeIs('sections.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('sections.index') }}" class="sidebar-link {{ request()->routeIs('sections.index') ? 'active' : '' }}">
+                            <i class="bi bi-list-ul"></i> View All
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('sections.create') }}" class="sidebar-link {{ request()->routeIs('sections.create') ? 'active' : '' }}">
+                            <i class="bi bi-plus-lg"></i> Add New
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
+        @if(Auth::user()->isTeacher())
+            <!-- Teacher Menu Items -->
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-calendar2-check"></i>
+                    <span>My Classes</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-clipboard-check"></i>
+                    <span>Mark Attendance</span>
+                </a>
+            </li>
+        @endif
+
+        @if(Auth::user()->isStudent())
+            <!-- Student Menu Items -->
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-graph-up"></i>
+                    <span>My Results</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>My Attendance</span>
+                </a>
+            </li>
+        @endif
+
+        @if(Auth::user()->isParent())
+            <!-- Parent Menu Items -->
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-person-fill"></i>
+                    <span>My Child</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-graph-up"></i>
+                    <span>Child Results</span>
+                </a>
+            </li>
+        @endif
+    </ul>
+</aside>
+
+<style>
+    .submenu-toggle i:last-child {
+        transition: transform 0.3s ease;
+    }
+
+    .submenu-toggle i:last-child.rotate-180 {
+        transform: rotate(180deg);
+    }
+</style>
+
