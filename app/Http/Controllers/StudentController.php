@@ -8,6 +8,7 @@ use App\Models\Classes;
 use App\Models\Section;
 use App\Models\Parent_;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
@@ -44,9 +45,14 @@ class StudentController extends Controller
             'password' => 'required|min:6|confirmed',
             'admission_no' => 'required|unique:students',
             'date_of_birth' => 'nullable|date',
-            'gender' => 'nullable|in:Male,Female,Other',
+            'gender' => 'nullable|in:male,female,other',
             'class_id' => 'required|exists:classes,id',
-            'section_id' => 'required|exists:sections,id',
+            'section_id' => [
+                'required',
+                Rule::exists('sections', 'id')->where(function ($query) use ($request) {
+                    return $query->where('class_id', $request->class_id);
+                }),
+            ],
             'parent_id' => 'nullable|exists:parents,id',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
@@ -105,17 +111,27 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'email' => ['required', 'email', Rule::unique('users')->ignore($student->user_id)],
+            'admission_no' => ['required', Rule::unique('students')->ignore($student->id)],
             'date_of_birth' => 'nullable|date',
-            'gender' => 'nullable|in:Male,Female,Other',
+            'gender' => 'nullable|in:male,female,other',
             'class_id' => 'required|exists:classes,id',
-            'section_id' => 'required|exists:sections,id',
+            'section_id' => [
+                'required',
+                Rule::exists('sections', 'id')->where(function ($query) use ($request) {
+                    return $query->where('class_id', $request->class_id);
+                }),
+            ],
             'parent_id' => 'nullable|exists:parents,id',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
         ]);
 
         // Update user
-        $student->user->update(['name' => $validated['name']]);
+        $student->user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ]);
 
         // Update student
         $student->update($validated);

@@ -40,9 +40,4 @@ class Student extends Model
     {
         return $this->belongsTo(Parent_::class, 'parent_id');
     }
-
-    // Future relationships for Phase 2-4
-    // public function attendances()
-    // public function marks()
-    // public function fees()
 }

@@ -46,17 +46,17 @@
                             <span class="badge badge-success">Active</span>
                         </td>
                         <td>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <a href="{{ route('sections.show', $section->id) }}" class="btn btn-info" title="View">
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('sections.show', $section->id) }}" class="btn-action btn-action-view" title="View Details">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                <a href="{{ route('sections.edit', $section->id) }}" class="btn btn-warning" title="Edit">
+                                <a href="{{ route('sections.edit', $section->id) }}" class="btn-action btn-action-edit" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form action="{{ route('sections.destroy', $section->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                <form action="{{ route('sections.destroy', $section->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" title="Delete">
+                                    <button type="submit" class="btn-action btn-action-delete" title="Delete">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -84,6 +84,57 @@
     .btn-group-sm .btn {
         padding: 0.375rem 0.5rem;
         font-size: 0.875rem;
+    }
+
+    /* Modern Action Buttons */
+    .btn-action {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: none;
+        transition: all 0.2s ease;
+        background: transparent;
+        text-decoration: none;
+    }
+    .btn-action i {
+        font-size: 1rem;
+        line-height: 1;
+    }
+    
+    .btn-action-view {
+        color: #3b82f6;
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+    .btn-action-view:hover {
+        background-color: #3b82f6;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-action-edit {
+        color: #f59e0b;
+        background-color: rgba(245, 158, 11, 0.1);
+    }
+    .btn-action-edit:hover {
+        background-color: #f59e0b;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-action-delete {
+        color: #ef4444;
+        background-color: rgba(239, 68, 68, 0.1);
+    }
+    .btn-action-delete:hover {
+        background-color: #ef4444;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
     }
 
     @media (max-width: 768px) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Section;
 use App\Models\Classes;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SectionController extends Controller
 {
@@ -33,7 +34,14 @@ class SectionController extends Controller
     {
         $validated = $request->validate([
             'class_id' => 'required|exists:classes,id',
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('sections')->where(function ($query) use ($request) {
+                    return $query->where('class_id', $request->class_id);
+                }),
+            ],
             'description' => 'nullable|string',
         ]);
 
@@ -67,7 +75,14 @@ class SectionController extends Controller
     {
         $validated = $request->validate([
             'class_id' => 'required|exists:classes,id',
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('sections')->ignore($section->id)->where(function ($query) use ($request) {
+                    return $query->where('class_id', $request->class_id);
+                }),
+            ],
             'description' => 'nullable|string',
         ]);
 

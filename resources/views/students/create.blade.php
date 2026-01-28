@@ -116,6 +116,17 @@
                             <option value="">Select Class</option>
                             @foreach($classes as $class)
                             <option value="{{ $class->id }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('class_id') <span class="invalid-feedback d-block">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="section_id" class="form-label">Section *</label>
+                        <select id="section_id" name="section_id" class="form-control @error('section_id') is-invalid @enderror" required>
+                            <option value="">Select Section</option>
                             @foreach($sections as $section)
                             <option value="{{ $section->id }}" {{ old('section_id') == $section->id ? 'selected' : '' }}>{{ $section->name }}</option>
                             @endforeach
@@ -124,6 +135,7 @@
                     </div>
                 </div>
             </div>
+
 
             <div class="row">
                 <div class="col-md-6">
@@ -170,4 +182,41 @@
         color: #ef4444;
     }
 </style>
+@endsection
+
+@section('extra-js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const classSelect = document.getElementById('class_id');
+        const sectionSelect = document.getElementById('section_id');
+        const allSections = @json($sections);
+        const oldSectionId = "{{ old('section_id') }}";
+
+        function updateSections() {
+            const classId = classSelect.value;
+            sectionSelect.innerHTML = '<option value="">Select Section</option>';
+
+            if (classId) {
+                const filtered = allSections.filter(s => s.class_id == classId);
+                filtered.forEach(s => {
+                    const option = document.createElement('option');
+                    option.value = s.id;
+                    option.textContent = s.name;
+                    if (oldSectionId && s.id == oldSectionId) {
+                        option.selected = true;
+                    }
+                    sectionSelect.appendChild(option);
+                });
+            }
+        }
+
+        if (classSelect && sectionSelect) {
+            classSelect.addEventListener('change', updateSections);
+            
+            if (classSelect.value) {
+                updateSections();
+            }
+        }
+    });
+</script>
 @endsection

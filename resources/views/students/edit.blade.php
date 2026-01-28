@@ -153,3 +153,41 @@
     }
 </style>
 @endsection
+
+@section('extra-js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const classSelect = document.getElementById('class_id');
+        const sectionSelect = document.getElementById('section_id');
+        const allSections = @json($sections);
+        const oldSectionId = "{{ old('section_id', $student->section_id) }}";
+
+        function updateSections() {
+            const classId = classSelect.value;
+            sectionSelect.innerHTML = '<option value="">Select Section</option>';
+
+            if (classId) {
+                const filtered = allSections.filter(s => s.class_id == classId);
+                filtered.forEach(s => {
+                    const option = document.createElement('option');
+                    option.value = s.id;
+                    option.textContent = s.name;
+                    if (oldSectionId && s.id == oldSectionId) {
+                        option.selected = true;
+                    }
+                    sectionSelect.appendChild(option);
+                });
+            }
+        }
+
+        if (classSelect && sectionSelect) {
+            classSelect.addEventListener('change', updateSections);
+            
+            // Initial load
+            if (classSelect.value) {
+                updateSections();
+            }
+        }
+    });
+</script>
+@endsection
