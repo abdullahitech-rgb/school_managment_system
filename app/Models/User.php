@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'status',
+        'school_id',
     ];
 
     /**
@@ -105,4 +106,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Parent_::class);
     }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
 }
+

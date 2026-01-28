@@ -21,6 +21,11 @@ class Subject extends Model
         return $this->belongsTo(Classes::class, 'class_id');
     }
 
+    public function sections()
+    {
+        return $this->belongsToMany(Section::class, 'subject_section');
+    }
+
     // Future: marks relationship in Phase 3
     // public function marks()
 }

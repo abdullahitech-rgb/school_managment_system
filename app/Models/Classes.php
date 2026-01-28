@@ -14,6 +14,7 @@ class Classes extends Model
     protected $fillable = [
         'name',
         'description',
+        'school_id',
     ];
 
     public function sections()
@@ -34,5 +35,10 @@ class Classes extends Model
     public function classTeachers()
     {
         return $this->hasMany(ClassTeacher::class, 'class_id');
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
     }
 }

@@ -10,36 +10,76 @@ use App\Models\Classes;
 use App\Models\Section;
 use App\Models\Subject;
 use App\Models\ClassTeacher;
+use App\Models\School;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create SuperAdmin
+        // Create SuperAdmin (no school assigned)
         User::create([
             'name' => 'Super Administrator',
             'email' => 'superadmin@school.com',
             'password' => bcrypt('password123'),
             'role' => 'superAdmin',
             'status' => 'active',
+            'school_id' => null,
         ]);
 
-        // Create Admin
-        User::create([
-            'name' => 'School Administrator',
-            'email' => 'admin@school.com',
-            'password' => bcrypt('password123'),
-            'role' => 'admin',
+        // Create Schools
+        $school1 = School::create([
+            'name' => 'Primary School',
+            'email' => 'primary@school.com',
+            'phone' => '9841000001',
+            'address' => '123 Main Street',
+            'city' => 'Kathmandu',
+            'state' => 'Bagmati',
+            'zip_code' => '44600',
+            'description' => 'A leading primary education institution',
             'status' => 'active',
         ]);
 
-        // Create Classes
-        $classes = [
-            Classes::create(['name' => 'Class 1', 'description' => 'First Grade']),
-            Classes::create(['name' => 'Class 2', 'description' => 'Second Grade']),
-            Classes::create(['name' => 'Class 3', 'description' => 'Third Grade']),
-        ];
+        $school2 = School::create([
+            'name' => 'Secondary School',
+            'email' => 'secondary@school.com',
+            'phone' => '9841000002',
+            'address' => '456 Oak Avenue',
+            'city' => 'Pokhara',
+            'state' => 'Gandaki',
+            'zip_code' => '33700',
+            'description' => 'A reputed secondary education institution',
+            'status' => 'active',
+        ]);
+
+        // Create Admin users for each school
+        User::create([
+            'name' => 'Primary School Administrator',
+            'email' => 'admin@primary.com',
+            'password' => bcrypt('password123'),
+            'role' => 'admin',
+            'status' => 'active',
+            'school_id' => $school1->id,
+        ]);
+
+        User::create([
+            'name' => 'Secondary School Administrator',
+            'email' => 'admin@secondary.com',
+            'password' => bcrypt('password123'),
+            'role' => 'admin',
+            'status' => 'active',
+            'school_id' => $school2->id,
+        ]);
+
+        // Create Classes for School 1
+        $classes = [];
+        for ($i = 1; $i <= 3; $i++) {
+            $classes[] = Classes::create([
+                'name' => "Class $i",
+                'description' => "Grade $i",
+                'school_id' => $school1->id,
+            ]);
+        }
 
         // Create Sections
         $sections = [];
@@ -57,15 +97,16 @@ class DatabaseSeeder extends Seeder
             Subject::create(['class_id' => $class->id, 'name' => 'Science', 'code' => 'SCI' . $index]);
         }
 
-        // Create Teachers
+        // Create Teachers for School 1
         $teachers = [];
         for ($i = 1; $i <= 5; $i++) {
             $user = User::create([
                 'name' => "Teacher $i",
-                'email' => "teacher$i@school.com",
+                'email' => "teacher$i@primary.com",
                 'password' => bcrypt('password123'),
                 'role' => 'teacher',
                 'status' => 'active',
+                'school_id' => $school1->id,
             ]);
 
             $teachers[] = Teacher::create([
@@ -77,15 +118,16 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Create Parents
+        // Create Parents for School 1
         $parents = [];
         for ($i = 1; $i <= 10; $i++) {
             $user = User::create([
                 'name' => "Parent $i",
-                'email' => "parent$i@email.com",
+                'email' => "parent$i@primary.com",
                 'password' => bcrypt('password123'),
                 'role' => 'parent',
                 'status' => 'active',
+                'school_id' => $school1->id,
             ]);
 
             $parents[] = Parent_::create([
@@ -96,17 +138,18 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Create Students
+        // Create Students for School 1
         $sectionIds = collect($sections)->flatMap(fn($arr) => $arr)->pluck('id')->toArray();
         $parentIndex = 0;
 
         for ($i = 1; $i <= 30; $i++) {
             $user = User::create([
                 'name' => "Student $i",
-                'email' => "student$i@school.com",
+                'email' => "student$i@primary.com",
                 'password' => bcrypt('password123'),
                 'role' => 'student',
                 'status' => 'active',
+                'school_id' => $school1->id,
             ]);
 
             $sectionId = $sectionIds[$i % count($sectionIds)];

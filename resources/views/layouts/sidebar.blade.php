@@ -5,7 +5,7 @@
             <i class="bi bi-mortarboard-fill"></i>
             <span>ACADEMIA</span>
         </div>
-        
+
         <!-- User Widget (Optional, fits well in sidebar for admins) -->
         <div class="user-profile-widget">
             <div class="user-avatar-circle">
@@ -21,54 +21,88 @@
     <!-- Menu -->
     <ul class="sidebar-menu">
         <div class="sidebar-title">Main Menu</div>
-        
+
         <!-- Dashboard -->
         <li class="sidebar-item">
-            <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            @if(Auth::user()->isSuperAdmin())
+                <a href="{{ route('superadmin.dashboard') }}" class="sidebar-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
+            @else
+                <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            @endif
                 <i class="bi bi-grid-1x2-fill"></i>
                 <span>Dashboard</span>
             </a>
         </li>
 
-        @if(Auth::user()->isAdmin() || Auth::user()->isSuperAdmin())
+        @if(Auth::user()->isSuperAdmin())
+            <!-- Super Admin Menu -->
             <div class="sidebar-title">Management</div>
-            
-            <!-- Students -->
+
+            <!-- Schools -->
             <li class="sidebar-item">
-                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('students.*') ? 'active' : '' }}">
+                <a href="{{ route('superadmin.schools.index') }}" class="sidebar-link {{ request()->routeIs('superadmin.schools.*') ? 'active' : '' }}">
+                    <i class="bi bi-building"></i>
+                    <span>Schools</span>
+                </a>
+            </li>
+
+            <!-- Admins -->
+            <li class="sidebar-item">
+                <a href="{{ route('superadmin.admins.index') }}" class="sidebar-link {{ request()->routeIs('superadmin.admins.*') ? 'active' : '' }}">
                     <i class="bi bi-people-fill"></i>
-                    <span>Students</span>
+                    <span>Admins</span>
+                </a>
+            </li>
+
+            <!-- Settings -->
+            <li class="sidebar-item">
+                <a href="{{ route('superadmin.settings') }}" class="sidebar-link {{ request()->routeIs('superadmin.settings') ? 'active' : '' }}">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        @endif
+
+        @if(Auth::user()->isAdmin())
+            <!-- Admin Menu -->
+            <div class="sidebar-title">Management</div>
+
+            <!-- Teachers -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.teachers.*') ? 'active' : '' }}">
+                    <i class="bi bi-person-workspace"></i>
+                    <span>Teachers</span>
                     <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
                 </a>
-                <ul class="submenu {{ request()->routeIs('students.*') ? 'show' : '' }}">
+                <ul class="submenu {{ request()->routeIs('admin.teachers.*') ? 'show' : '' }}">
                     <li class="sidebar-item">
-                        <a href="{{ route('students.index') }}" class="sidebar-link {{ request()->routeIs('students.index') ? 'active' : '' }}">
-                            <span>All Students</span>
+                        <a href="{{ route('admin.teachers.index') }}" class="sidebar-link {{ request()->routeIs('admin.teachers.index') ? 'active' : '' }}">
+                            <span>All Teachers</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{ route('students.create') }}" class="sidebar-link {{ request()->routeIs('students.create') ? 'active' : '' }}">
+                        <a href="{{ route('admin.teachers.create') }}" class="sidebar-link {{ request()->routeIs('admin.teachers.create') ? 'active' : '' }}">
                             <span>Add New</span>
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <!-- Teachers -->
+            <!-- Students -->
             <li class="sidebar-item">
-                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('teachers.*') ? 'active' : '' }}">
-                    <i class="bi bi-person-workspace"></i>
-                    <span>Teachers</span>
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.students.*') ? 'active' : '' }}">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Students</span>
                     <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
                 </a>
-                <ul class="submenu {{ request()->routeIs('teachers.*') ? 'show' : '' }}">
+                <ul class="submenu {{ request()->routeIs('admin.students.*') ? 'show' : '' }}">
                     <li class="sidebar-item">
-                        <a href="{{ route('teachers.index') }}" class="sidebar-link {{ request()->routeIs('teachers.index') ? 'active' : '' }}">
-                            <span>All Teachers</span>
+                        <a href="{{ route('admin.students.index') }}" class="sidebar-link {{ request()->routeIs('admin.students.index') ? 'active' : '' }}">
+                            <span>All Students</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{ route('teachers.create') }}" class="sidebar-link {{ request()->routeIs('teachers.create') ? 'active' : '' }}">
+                        <a href="{{ route('admin.students.create') }}" class="sidebar-link {{ request()->routeIs('admin.students.create') ? 'active' : '' }}">
                             <span>Add New</span>
                         </a>
                     </li>
@@ -77,19 +111,19 @@
 
             <!-- Classes -->
             <li class="sidebar-item">
-                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('classes.*') ? 'active' : '' }}">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.classes.*') ? 'active' : '' }}">
                     <i class="bi bi-book-fill"></i>
                     <span>Classes</span>
                     <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
                 </a>
-                <ul class="submenu {{ request()->routeIs('classes.*') ? 'show' : '' }}">
+                <ul class="submenu {{ request()->routeIs('admin.classes.*') ? 'show' : '' }}">
                     <li class="sidebar-item">
-                        <a href="{{ route('classes.index') }}" class="sidebar-link {{ request()->routeIs('classes.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.classes.index') }}" class="sidebar-link {{ request()->routeIs('admin.classes.index') ? 'active' : '' }}">
                             <span>All Classes</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{ route('classes.create') }}" class="sidebar-link {{ request()->routeIs('classes.create') ? 'active' : '' }}">
+                        <a href="{{ route('admin.classes.create') }}" class="sidebar-link {{ request()->routeIs('admin.classes.create') ? 'active' : '' }}">
                             <span>Add New</span>
                         </a>
                     </li>
@@ -98,19 +132,128 @@
 
             <!-- Sections -->
             <li class="sidebar-item">
-                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('sections.*') ? 'active' : '' }}">
-                    <i class="bi bi-collection-fill"></i>
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.sections.*') ? 'active' : '' }}">
+                    <i class="bi bi-columns-gap"></i>
                     <span>Sections</span>
                     <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
                 </a>
-                <ul class="submenu {{ request()->routeIs('sections.*') ? 'show' : '' }}">
+                <ul class="submenu {{ request()->routeIs('admin.sections.*') ? 'show' : '' }}">
                     <li class="sidebar-item">
-                        <a href="{{ route('sections.index') }}" class="sidebar-link {{ request()->routeIs('sections.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.sections.index') }}" class="sidebar-link {{ request()->routeIs('admin.sections.index') ? 'active' : '' }}">
                             <span>All Sections</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{ route('sections.create') }}" class="sidebar-link {{ request()->routeIs('sections.create') ? 'active' : '' }}">
+                        <a href="{{ route('admin.sections.create') }}" class="sidebar-link {{ request()->routeIs('admin.sections.create') ? 'active' : '' }}">
+                            <span>Add New</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Subjects -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.subjects.*') ? 'active' : '' }}">
+                    <i class="bi bi-collection-fill"></i>
+                    <span>Subjects</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
+                </a>
+                <ul class="submenu {{ request()->routeIs('admin.subjects.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.subjects.index') }}" class="sidebar-link {{ request()->routeIs('admin.subjects.index') ? 'active' : '' }}">
+                            <span>All Subjects</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.subjects.create') }}" class="sidebar-link {{ request()->routeIs('admin.subjects.create') ? 'active' : '' }}">
+                            <span>Add New</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <div class="sidebar-title">Academics</div>
+
+            <!-- Exams -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.exams.*') ? 'active' : '' }}">
+                    <i class="bi bi-pencil-square"></i>
+                    <span>Exams</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
+                </a>
+                <ul class="submenu {{ request()->routeIs('admin.exams.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.exams.index') }}" class="sidebar-link {{ request()->routeIs('admin.exams.index') ? 'active' : '' }}">
+                            <span>All Exams</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.exams.create') }}" class="sidebar-link {{ request()->routeIs('admin.exams.create') ? 'active' : '' }}">
+                            <span>Add New</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Results -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.results.*') ? 'active' : '' }}">
+                    <i class="bi bi-bar-chart-fill"></i>
+                    <span>Results</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
+                </a>
+                <ul class="submenu {{ request()->routeIs('admin.results.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.results.index') }}" class="sidebar-link {{ request()->routeIs('admin.results.index') ? 'active' : '' }}">
+                            <span>All Results</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.results.create') }}" class="sidebar-link {{ request()->routeIs('admin.results.create') ? 'active' : '' }}">
+                            <span>Add New</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Attendance -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.attendance.*') ? 'active' : '' }}">
+                    <i class="bi bi-clipboard-check-fill"></i>
+                    <span>Attendance</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
+                </a>
+                <ul class="submenu {{ request()->routeIs('admin.attendance.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.attendance.index') }}" class="sidebar-link {{ request()->routeIs('admin.attendance.index') ? 'active' : '' }}">
+                            <span>All Records</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.attendance.create') }}" class="sidebar-link {{ request()->routeIs('admin.attendance.create') ? 'active' : '' }}">
+                            <span>Mark Attendance</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <div class="sidebar-title">Finance</div>
+
+            <!-- Fees -->
+            <li class="sidebar-item">
+                <a href="javascript:void(0)" class="sidebar-link submenu-toggle {{ request()->routeIs('admin.fees.*') ? 'active' : '' }}">
+                    <i class="bi bi-cash-coin"></i>
+                    <span>Fees</span>
+                    <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8rem; transition: transform 0.3s;"></i>
+                </a>
+                <ul class="submenu {{ request()->routeIs('admin.fees.*') ? 'show' : '' }}">
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.fees.index') }}" class="sidebar-link {{ request()->routeIs('admin.fees.index') ? 'active' : '' }}">
+                            <span>All Fees</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.fees.create') }}" class="sidebar-link {{ request()->routeIs('admin.fees.create') ? 'active' : '' }}">
                             <span>Add New</span>
                         </a>
                     </li>

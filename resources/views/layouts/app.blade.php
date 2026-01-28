@@ -16,16 +16,19 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usznLUbFoTomy2Badge9qQMatqEcVQUoNkqbeM2OxskUpCsqrNBbeFtyx86F5EA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Modern Admin CSS -->
     <link href="{{ asset('css/modern-admin.css') }}" rel="stylesheet">
-    
+
     <!-- Fallback/Legacy CSS if needed -->
     <style>
         /* Critical overrides just in case */
         .wrapper { display: flex; overflow-x: hidden; }
         .main-content-wrapper { flex: 1; }
     </style>
-    
+
     @yield('extra-css')
 </head>
 <body>
@@ -61,7 +64,7 @@
             const sidebarToggle = document.querySelector('.toggle-sidebar-btn');
             const sidebar = document.querySelector('.sidebar');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
-            
+
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', () => {
                     sidebar.classList.toggle('show');
@@ -81,11 +84,11 @@
             submenuToggles.forEach(toggle => {
                 toggle.addEventListener('click', (e) => {
                     e.preventDefault();
-                    
+
                     // Find the next sibling which is the ul.submenu
                     const submenu = toggle.nextElementSibling;
                     const icon = toggle.querySelector('.bi-chevron-down');
-                    
+
                     if (submenu) {
                         submenu.classList.toggle('show');
                         // Optional: Rotate icon if it exists
@@ -103,11 +106,11 @@
             // Active State Handling
             const currentUrl = window.location.href;
             const sidebarLinks = document.querySelectorAll('.sidebar-link');
-            
+
             sidebarLinks.forEach(link => {
                 if (link.href === currentUrl) {
                     link.classList.add('active');
-                    
+
                     // Open parent submenu if exists
                     const parentItem = link.closest('.submenu');
                     if (parentItem) {
