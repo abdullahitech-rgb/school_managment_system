@@ -198,7 +198,7 @@ class AdminController extends Controller
             'password' => 'required|min:6|confirmed',
             'admission_no' => 'required|unique:students',
             'date_of_birth' => 'nullable|date',
-            'gender' => 'nullable|in:male,female,other',
+            'gender' => ['nullable', Rule::in(['male', 'female', 'other', 'Male', 'Female', 'Other'])],
             'class_id' => [
                 'required',
                 Rule::exists('classes', 'id')->where(function ($q) use ($schoolId) {
@@ -219,6 +219,8 @@ class AdminController extends Controller
             'status' => 'required|in:active,inactive',
         ]);
 
+        $gender = $validated['gender'] ? ucfirst(strtolower($validated['gender'])) : null;
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -232,7 +234,7 @@ class AdminController extends Controller
             'user_id' => $user->id,
             'admission_no' => $validated['admission_no'],
             'date_of_birth' => $validated['date_of_birth'],
-            'gender' => $validated['gender'],
+            'gender' => $gender,
             'class_id' => $validated['class_id'],
             'section_id' => $validated['section_id'],
             'address' => $validated['address'],
@@ -272,7 +274,7 @@ class AdminController extends Controller
             'email' => ['required', 'email', Rule::unique('users')->ignore($student->user_id)],
             'admission_no' => ['required', Rule::unique('students')->ignore($student->id)],
             'date_of_birth' => 'nullable|date',
-            'gender' => 'nullable|in:male,female,other',
+            'gender' => ['nullable', Rule::in(['male', 'female', 'other', 'Male', 'Female', 'Other'])],
             'class_id' => [
                 'required',
                 Rule::exists('classes', 'id')->where(function ($q) use ($schoolId) {
@@ -293,13 +295,23 @@ class AdminController extends Controller
             'status' => 'required|in:active,inactive',
         ]);
 
+        $gender = $validated['gender'] ? ucfirst(strtolower($validated['gender'])) : null;
+
         $student->user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'status' => $validated['status'],
         ]);
 
-        $student->update($validated);
+        $student->update([
+            'admission_no' => $validated['admission_no'],
+            'date_of_birth' => $validated['date_of_birth'],
+            'gender' => $gender,
+            'class_id' => $validated['class_id'],
+            'section_id' => $validated['section_id'],
+            'address' => $validated['address'],
+            'phone' => $validated['phone'],
+        ]);
 
         return redirect()->route('admin.students.index')->with('success', 'Student updated successfully');
     }
