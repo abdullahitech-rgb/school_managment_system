@@ -29,7 +29,12 @@ class Classes extends Model
 
     public function subjects()
     {
-        return $this->hasMany(Subject::class, 'class_id');
+        return $this->belongsToMany(Subject::class, 'class_subjects', 'class_id', 'subject_id');
+    }
+
+    public function classSubjects()
+    {
+        return $this->hasMany(ClassSubject::class, 'class_id');
     }
 
     public function classTeachers()

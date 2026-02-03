@@ -47,13 +47,9 @@
                                             <td><strong>{{ $record->student?->name ?? '-' }}</strong></td>
                                             <td>{{ $record->attendance_date ? \Carbon\Carbon::parse($record->attendance_date)->format('d M Y') : '-' }}</td>
                                             <td>
-                                                @if ($record->status == 'present')
-                                                    <span class="badge bg-success">Present</span>
-                                                @elseif ($record->status == 'absent')
-                                                    <span class="badge bg-danger">Absent</span>
-                                                @else
-                                                    <span class="badge bg-warning">On Leave</span>
-                                                @endif
+                                                <span class="badge bg-secondary">
+                                                    {{ $record->attendanceType?->name ?? 'Unknown' }}
+                                                </span>
                                             </td>
                                             <td>{{ $record->remarks ?? '-' }}</td>
                                             <td>
