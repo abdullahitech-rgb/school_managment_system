@@ -48,13 +48,13 @@
                                     @foreach ($students as $student)
                                         <tr>
                                             <td><strong>{{ $student->admission_no }}</strong></td>
-                                            <td>{{ $student->name }}</td>
-                                            <td>{{ $student->email }}</td>
+                                            <td>{{ $student->user?->name ?? '-' }}</td>
+                                            <td>{{ $student->user?->email ?? '-' }}</td>
                                             <td>{{ $student->phone ?? '-' }}</td>
                                             <td>{{ $student->class?->name ?? '-' }}</td>
                                             <td>{{ $student->section?->name ?? '-' }}</td>
                                             <td>
-                                                @if ($student->status == 'active')
+                                                @if ($student->user?->status === 'active')
                                                     <span class="badge bg-success">Active</span>
                                                 @else
                                                     <span class="badge bg-danger">Inactive</span>
@@ -70,9 +70,9 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
                                                             <i class="fas fa-trash-alt"></i> Delete
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach

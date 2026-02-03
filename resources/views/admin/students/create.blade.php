@@ -65,6 +65,15 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="password_confirmation" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="class_id" class="form-label">Class <span class="text-danger">*</span></label>
                                     <select class="form-select @error('class_id') is-invalid @enderror" id="class_id" name="class_id" required>
                                         <option value="">Select Class</option>
@@ -109,9 +118,26 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="dob" class="form-label">Date of Birth</label>
-                                    <input type="date" class="form-control @error('dob') is-invalid @enderror" id="dob" name="dob" value="{{ old('dob') }}">
-                                    @error('dob')
+                                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control @error('date_of_birth') is-invalid @enderror" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}">
+                                    @error('date_of_birth')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select @error('gender') is-invalid @enderror" id="gender" name="gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                                        <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
+                                    </select>
+                                    @error('gender')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -147,4 +173,52 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('extra-js')
+<script>
+    const classSelect = document.getElementById('class_id');
+    const sectionSelect = document.getElementById('section_id');
+    const originalSectionId = "{{ old('section_id') }}";
+
+    function resetSections() {
+        sectionSelect.innerHTML = '<option value="">Select Section</option>';
+    }
+
+    function loadSections(classId) {
+        if (!classId) {
+            resetSections();
+            return;
+        }
+
+        fetch(`{{ url('admin/class') }}/${classId}/sections`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load sections');
+                }
+                return response.json();
+            })
+            .then(sections => {
+                resetSections();
+                sections.forEach(section => {
+                    const option = document.createElement('option');
+                    option.value = section.id;
+                    option.textContent = section.name;
+                    if (originalSectionId && String(section.id) === String(originalSectionId)) {
+                        option.selected = true;
+                    }
+                    sectionSelect.appendChild(option);
+                });
+            })
+            .catch(() => resetSections());
+    }
+
+    classSelect.addEventListener('change', event => {
+        loadSections(event.target.value);
+    });
+
+    if (classSelect.value) {
+        loadSections(classSelect.value);
+    }
+</script>
 @endsection
