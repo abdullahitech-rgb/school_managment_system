@@ -29,4 +29,9 @@ class Section extends Model
     {
         return $this->hasMany(ClassTeacher::class, 'section_id');
     }
+
+    public function examSchedules()
+    {
+        return $this->hasMany(ExamSchedule::class, 'section_id');
+    }
 }

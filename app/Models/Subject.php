@@ -30,6 +30,13 @@ class Subject extends Model
         return $this->hasMany(SubjectTeacher::class);
     }
 
-    // Future: marks relationship in Phase 3
-    // public function marks()
+    public function marks()
+    {
+        return $this->hasMany(Mark::class);
+    }
+
+    public function examSchedules()
+    {
+        return $this->hasMany(ExamSchedule::class);
+    }
 }

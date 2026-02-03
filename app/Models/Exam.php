@@ -12,6 +12,7 @@ class Exam extends Model
     protected $fillable = [
         'school_id',
         'class_id',
+        'exam_type_id',
         'name',
         'exam_date',
         'description',
@@ -35,8 +36,23 @@ class Exam extends Model
         return $this->belongsTo(Classes::class, 'class_id');
     }
 
+    public function type()
+    {
+        return $this->belongsTo(ExamType::class, 'exam_type_id');
+    }
+
     public function results()
     {
         return $this->hasMany(Result::class);
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(ExamSchedule::class);
+    }
+
+    public function resultCards()
+    {
+        return $this->hasMany(ResultCard::class);
     }
 }
