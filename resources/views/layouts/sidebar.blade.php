@@ -34,6 +34,13 @@
             </a>
         </li>
 
+        <li class="sidebar-item">
+            <a href="{{ route('roles.index') }}" class="sidebar-link {{ request()->routeIs('roles.*') ? 'active' : '' }}">
+                <i class="bi bi-shield-lock-fill"></i>
+                <span>Roles & Permissions</span>
+            </a>
+        </li>
+
         @if(Auth::user()->isSuperAdmin())
             <!-- Super Admin Menu -->
             <div class="sidebar-title">Management</div>
@@ -310,4 +317,3 @@
         @endif
     </ul>
 </aside>
-

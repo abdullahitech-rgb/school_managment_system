@@ -7,6 +7,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RolePermissionController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -28,6 +29,9 @@ Route::middleware(['auth'])->group(function () {
             return view('dashboard', ['user' => $user]);
         }
     })->name('dashboard');
+
+    Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
+    Route::get('/roles/{role}', [RolePermissionController::class, 'show'])->name('roles.show');
 
     // SuperAdmin routes
     Route::middleware('role:superAdmin')->prefix('superadmin')->name('superadmin.')->group(function () {
@@ -153,4 +157,3 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/register', function () {
     return view('register');
 })->name('register');
-
