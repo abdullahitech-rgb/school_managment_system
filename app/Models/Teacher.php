@@ -36,4 +36,9 @@ class Teacher extends Model
     {
         return $this->hasMany(SubjectTeacher::class, 'teacher_id');
     }
+
+    public function examInvigilators()
+    {
+        return $this->hasMany(ExamInvigilator::class, 'teacher_id');
+    }
 }

@@ -40,4 +40,14 @@ class Student extends Model
     {
         return $this->belongsTo(Parent_::class, 'parent_id');
     }
+
+    public function marks()
+    {
+        return $this->hasMany(Mark::class);
+    }
+
+    public function resultCards()
+    {
+        return $this->hasMany(ResultCard::class);
+    }
 }

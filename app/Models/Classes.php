@@ -42,6 +42,11 @@ class Classes extends Model
         return $this->hasMany(ClassTeacher::class, 'class_id');
     }
 
+    public function examSchedules()
+    {
+        return $this->hasMany(ExamSchedule::class, 'class_id');
+    }
+
     public function school()
     {
         return $this->belongsTo(School::class);
