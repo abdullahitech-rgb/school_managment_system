@@ -19,6 +19,7 @@ class Student extends Model
         'parent_id',
         'address',
         'phone',
+        'has',
     ];
 
     public function user()

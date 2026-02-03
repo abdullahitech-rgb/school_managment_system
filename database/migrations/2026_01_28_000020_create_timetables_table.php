@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('room')->nullable();
             $table->timestamps();
 
-            $table->unique(['school_id', 'class_id', 'section_id', 'period_id', 'day_of_week']);
+            $table->unique(['school_id', 'class_id', 'section_id', 'period_id', 'day_of_week'], 'timetable_unique_schedule');
         });
     }
 

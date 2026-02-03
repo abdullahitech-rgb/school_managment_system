@@ -44,7 +44,7 @@
                                 <tbody>
                                     @foreach ($attendance as $record)
                                         <tr>
-                                            <td><strong>{{ $record->student?->name ?? '-' }}</strong></td>
+                                            <td><strong>{{ $record->student?->user?->name ?? '-' }}</strong></td>
                                             <td>{{ $record->attendance_date ? \Carbon\Carbon::parse($record->attendance_date)->format('d M Y') : '-' }}</td>
                                             <td>
                                                 <span class="badge bg-secondary">

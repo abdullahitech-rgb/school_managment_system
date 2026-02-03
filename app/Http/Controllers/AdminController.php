@@ -888,7 +888,7 @@ class AdminController extends Controller
             $q->where('school_id', $schoolId);
         })->with('user')->get();
         $exams = Exam::where('school_id', $schoolId)->get();
-        $subjects = Subject::whereHas('class', function ($q) use ($schoolId) {
+        $subjects = Subject::whereHas('classes', function ($q) use ($schoolId) {
             $q->where('school_id', $schoolId);
         })->get();
 
@@ -920,7 +920,7 @@ class AdminController extends Controller
             'subject_id' => [
                 'required',
                 Rule::exists('subjects', 'id')->where(function ($q) use ($schoolId) {
-                    return $q->whereHas('class', function ($c) use ($schoolId) {
+                    return $q->whereHas('classes', function ($c) use ($schoolId) {
                         return $c->where('school_id', $schoolId);
                     });
                 }),
@@ -949,7 +949,7 @@ class AdminController extends Controller
             $q->where('school_id', $schoolId);
         })->with('user')->get();
         $exams = Exam::where('school_id', $schoolId)->get();
-        $subjects = Subject::whereHas('class', function ($q) use ($schoolId) {
+        $subjects = Subject::whereHas('classes', function ($q) use ($schoolId) {
             $q->where('school_id', $schoolId);
         })->get();
 
@@ -984,7 +984,7 @@ class AdminController extends Controller
             'subject_id' => [
                 'required',
                 Rule::exists('subjects', 'id')->where(function ($q) use ($schoolId) {
-                    return $q->whereHas('class', function ($c) use ($schoolId) {
+                    return $q->whereHas('classes', function ($c) use ($schoolId) {
                         return $c->where('school_id', $schoolId);
                     });
                 }),

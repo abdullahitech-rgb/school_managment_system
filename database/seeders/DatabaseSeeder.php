@@ -9,15 +9,19 @@ use App\Models\Parent_;
 use App\Models\Classes;
 use App\Models\Section;
 use App\Models\Subject;
+use App\Models\ClassSubject;
 use App\Models\ClassTeacher;
 use App\Models\School;
 use Database\Seeders\RolePermissionSeeder;
+use Database\Seeders\AttendanceTypeSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(AttendanceTypeSeeder::class);
+
         // Create SuperAdmin (no school assigned)
         User::create([
             'name' => 'Super Administrator',
@@ -93,9 +97,14 @@ class DatabaseSeeder extends Seeder
 
         // Create Subjects
         foreach ($classes as $index => $class) {
-            Subject::create(['class_id' => $class->id, 'name' => 'English', 'code' => 'ENG' . $index]);
-            Subject::create(['class_id' => $class->id, 'name' => 'Mathematics', 'code' => 'MATH' . $index]);
-            Subject::create(['class_id' => $class->id, 'name' => 'Science', 'code' => 'SCI' . $index]);
+            $english = Subject::create(['name' => 'English', 'code' => 'ENG' . $index]);
+            ClassSubject::create(['class_id' => $class->id, 'subject_id' => $english->id]);
+
+            $math = Subject::create(['name' => 'Mathematics', 'code' => 'MATH' . $index]);
+            ClassSubject::create(['class_id' => $class->id, 'subject_id' => $math->id]);
+
+            $science = Subject::create(['name' => 'Science', 'code' => 'SCI' . $index]);
+            ClassSubject::create(['class_id' => $class->id, 'subject_id' => $science->id]);
         }
 
         // Create Teachers for School 1
