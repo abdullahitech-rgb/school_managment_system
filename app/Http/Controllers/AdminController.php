@@ -11,6 +11,7 @@ use App\Models\Fee;
 use App\Models\Exam;
 use App\Models\Result;
 use App\Models\Attendance;
+use App\Models\AttendanceType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,7 @@ class AdminController extends Controller
         })->count();
 
         $totalClasses = Classes::where('school_id', $schoolId)->count();
-        $totalSubjects = Subject::whereHas('class', function ($q) use ($schoolId) {
+        $totalSubjects = Subject::whereHas('classes', function ($q) use ($schoolId) {
             $q->where('school_id', $schoolId);
         })->count();
 
@@ -504,9 +505,9 @@ class AdminController extends Controller
     public function indexSubjects()
     {
         $schoolId = Auth::user()->school_id;
-        $subjects = Subject::whereHas('class', function ($q) use ($schoolId) {
+        $subjects = Subject::whereHas('classes', function ($q) use ($schoolId) {
             $q->where('school_id', $schoolId);
-        })->with('class')->paginate(10);
+        })->with('classes')->paginate(10);
 
         return view('admin.subjects.index', compact('subjects'));
     }
@@ -570,9 +571,10 @@ class AdminController extends Controller
         $subject = Subject::create([
             'name' => $validated['name'],
             'code' => $validated['code'],
-            'class_id' => $validated['class_id'],
             'description' => $validated['description'],
         ]);
+
+        $subject->classes()->sync([$validated['class_id']]);
 
         // Attach subject to selected sections
         $subject->sections()->sync($validated['section_ids']);
@@ -586,15 +588,16 @@ class AdminController extends Controller
     public function editSubject(Subject $subject)
     {
         $schoolId = Auth::user()->school_id;
-        if ($subject->class->school_id != $schoolId) {
+        $selectedClass = $subject->classes()->where('school_id', $schoolId)->first();
+        if (!$selectedClass) {
             abort(403);
         }
 
         $classes = Classes::where('school_id', $schoolId)->get();
-        $sections = Section::where('class_id', $subject->class_id)->get();
+        $sections = Section::where('class_id', $selectedClass->id)->get();
         $selectedSectionIds = $subject->sections()->pluck('section_id')->toArray();
 
-        return view('admin.subjects.edit', compact('subject', 'classes', 'sections', 'selectedSectionIds'));
+        return view('admin.subjects.edit', compact('subject', 'classes', 'sections', 'selectedSectionIds', 'selectedClass'));
     }
 
     /**
@@ -603,7 +606,7 @@ class AdminController extends Controller
     public function updateSubject(Request $request, Subject $subject)
     {
         $schoolId = Auth::user()->school_id;
-        if ($subject->class->school_id != $schoolId) {
+        if (!$subject->classes()->where('school_id', $schoolId)->exists()) {
             abort(403);
         }
 
@@ -631,9 +634,10 @@ class AdminController extends Controller
         $subject->update([
             'name' => $validated['name'],
             'code' => $validated['code'],
-            'class_id' => $validated['class_id'],
             'description' => $validated['description'],
         ]);
+
+        $subject->classes()->sync([$validated['class_id']]);
 
         // Sync sections
         $subject->sections()->sync($validated['section_ids']);
@@ -647,7 +651,7 @@ class AdminController extends Controller
     public function destroySubject(Subject $subject)
     {
         $schoolId = Auth::user()->school_id;
-        if ($subject->class->school_id != $schoolId) {
+        if (!$subject->classes()->where('school_id', $schoolId)->exists()) {
             abort(403);
         }
 
@@ -1015,7 +1019,9 @@ class AdminController extends Controller
     public function indexAttendance()
     {
         $schoolId = Auth::user()->school_id;
-        $attendance = Attendance::where('school_id', $schoolId)->with('student')->paginate(10);
+        $attendance = Attendance::where('school_id', $schoolId)
+            ->with(['student', 'attendanceType'])
+            ->paginate(10);
 
         return view('admin.attendance.index', compact('attendance'));
     }
@@ -1029,8 +1035,9 @@ class AdminController extends Controller
         $students = Student::whereHas('class', function ($q) use ($schoolId) {
             $q->where('school_id', $schoolId);
         })->with('user')->get();
+        $attendanceTypes = AttendanceType::orderBy('name')->get();
 
-        return view('admin.attendance.create', compact('students'));
+        return view('admin.attendance.create', compact('students', 'attendanceTypes'));
     }
 
     /**
@@ -1050,7 +1057,7 @@ class AdminController extends Controller
                 }),
             ],
             'attendance_date' => 'required|date',
-            'status' => 'required|in:present,absent,leave',
+            'attendance_type_id' => 'required|exists:attendance_types,id',
             'remarks' => 'nullable|string',
         ]);
 
@@ -1072,8 +1079,9 @@ class AdminController extends Controller
         $students = Student::whereHas('class', function ($q) use ($schoolId) {
             $q->where('school_id', $schoolId);
         })->with('user')->get();
+        $attendanceTypes = AttendanceType::orderBy('name')->get();
 
-        return view('admin.attendance.edit', compact('attendance', 'students'));
+        return view('admin.attendance.edit', compact('attendance', 'students', 'attendanceTypes'));
     }
 
     /**
@@ -1096,7 +1104,7 @@ class AdminController extends Controller
                 }),
             ],
             'attendance_date' => 'required|date',
-            'status' => 'required|in:present,absent,leave',
+            'attendance_type_id' => 'required|exists:attendance_types,id',
             'remarks' => 'nullable|string',
         ]);
 

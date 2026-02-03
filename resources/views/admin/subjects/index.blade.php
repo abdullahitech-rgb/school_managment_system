@@ -46,7 +46,7 @@
                                         <tr>
                                             <td><strong>{{ $subject->code }}</strong></td>
                                             <td>{{ $subject->name }}</td>
-                                            <td>{{ $subject->class?->name ?? '-' }}</td>
+                                            <td>{{ $subject->classes->pluck('name')->join(', ') ?: '-' }}</td>
                                             <td>{{ Str::limit($subject->description, 50) ?? '-' }}</td>
                                             <td>
                                                 <div class="btn-group" role="group">

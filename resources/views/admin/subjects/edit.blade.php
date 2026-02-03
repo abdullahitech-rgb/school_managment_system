@@ -47,7 +47,7 @@
                             <select class="form-select @error('class_id') is-invalid @enderror" id="class_id" name="class_id" required>
                                 <option value="">Select Class</option>
                                 @foreach ($classes as $class)
-                                    <option value="{{ $class->id }}" {{ old('class_id', $subject->class_id) == $class->id ? 'selected' : '' }}>
+                                    <option value="{{ $class->id }}" {{ old('class_id', $selectedClass?->id) == $class->id ? 'selected' : '' }}>
                                         {{ $class->name }}
                                     </option>
                                 @endforeach
@@ -158,4 +158,3 @@ document.getElementById('subjectForm').addEventListener('submit', function(e) {
 });
 </script>
 @endsection
-

@@ -9,13 +9,13 @@ class Attendance extends Model
 {
     use HasFactory;
 
-    protected $table = 'attendance';
+    protected $table = 'attendances';
 
     protected $fillable = [
         'school_id',
         'student_id',
         'attendance_date',
-        'status',
+        'attendance_type_id',
         'remarks',
     ];
 
@@ -34,5 +34,10 @@ class Attendance extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function attendanceType()
+    {
+        return $this->belongsTo(AttendanceType::class);
     }
 }

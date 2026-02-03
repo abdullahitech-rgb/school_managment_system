@@ -49,14 +49,16 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                            <label for="attendance_type_id" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select @error('attendance_type_id') is-invalid @enderror" id="attendance_type_id" name="attendance_type_id" required>
                                 <option value="">Select Status</option>
-                                <option value="present" {{ old('status', 'present') == 'present' ? 'selected' : '' }}>Present</option>
-                                <option value="absent" {{ old('status') == 'absent' ? 'selected' : '' }}>Absent</option>
-                                <option value="leave" {{ old('status') == 'leave' ? 'selected' : '' }}>On Leave</option>
+                                @foreach ($attendanceTypes as $type)
+                                    <option value="{{ $type->id }}" {{ old('attendance_type_id') == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }}
+                                    </option>
+                                @endforeach
                             </select>
-                            @error('status')
+                            @error('attendance_type_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
