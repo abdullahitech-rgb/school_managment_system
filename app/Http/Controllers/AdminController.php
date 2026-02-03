@@ -180,7 +180,9 @@ class AdminController extends Controller
         $schoolId = Auth::user()->school_id;
         $classes = Classes::where('school_id', $schoolId)->get();
 
-        return view('admin.students.create', compact('classes'));
+        $sections = collect();
+
+        return view('admin.students.create', compact('classes', 'sections'));
     }
 
     /**
@@ -203,9 +205,18 @@ class AdminController extends Controller
                     return $q->where('school_id', $schoolId);
                 }),
             ],
-            'section_id' => 'nullable|exists:sections,id',
+            'section_id' => [
+                'nullable',
+                Rule::exists('sections', 'id')->where(function ($q) use ($request, $schoolId) {
+                    return $q->where('class_id', $request->input('class_id'))
+                        ->whereHas('class', function ($classQuery) use ($schoolId) {
+                            $classQuery->where('school_id', $schoolId);
+                        });
+                }),
+            ],
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $user = User::create([
@@ -214,7 +225,7 @@ class AdminController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => 'student',
             'school_id' => $schoolId,
-            'status' => 'active',
+            'status' => $validated['status'],
         ]);
 
         Student::create([
@@ -242,7 +253,8 @@ class AdminController extends Controller
         }
 
         $classes = Classes::where('school_id', $schoolId)->get();
-        return view('admin.students.edit', compact('student', 'classes'));
+        $sections = Section::where('class_id', $student->class_id)->get();
+        return view('admin.students.edit', compact('student', 'classes', 'sections'));
     }
 
     /**
@@ -267,14 +279,24 @@ class AdminController extends Controller
                     return $q->where('school_id', $schoolId);
                 }),
             ],
-            'section_id' => 'nullable|exists:sections,id',
+            'section_id' => [
+                'nullable',
+                Rule::exists('sections', 'id')->where(function ($q) use ($request, $schoolId) {
+                    return $q->where('class_id', $request->input('class_id'))
+                        ->whereHas('class', function ($classQuery) use ($schoolId) {
+                            $classQuery->where('school_id', $schoolId);
+                        });
+                }),
+            ],
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $student->user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'status' => $validated['status'],
         ]);
 
         $student->update($validated);
